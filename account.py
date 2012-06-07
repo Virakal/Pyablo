@@ -34,9 +34,20 @@ class Account(pyablo._FetchMixin):
         data = self._json_property('heroes')
         ret = []
         for id in data:
-            ret.append(pyablo.Hero(self._api, id, region=self._region,
+            ret.append(self._api.get_hero(id, region=self._region,
                                    locale=self._locale))
         return ret
+        
+    @property
+    def last_hero_played(self):
+        """
+        Return a `pyablo.Hero` object representing the last hero played by
+        the account.
+        
+        
+        """
+        id = self._json_property('last-hero-played')
+        return self._api.get_hero(id)
         
     @property
     def artisans(self):
@@ -44,7 +55,36 @@ class Account(pyablo._FetchMixin):
         Return a list of dictionaries defining the account's artisans.
         
         """
-        return self._json_property('artisan')
+        data = self._json_property('artisans')
+        ret = []
+        for artisan in data:
+            pyart = {
+                'slug' : artisan['slug'],
+                'level' : artisan['level'],
+                'step_current' : artisan['step-current'],
+                'step_max' : artisan['step-max'],
+            }
+            ret.append(pyart)
+        return ret
+        
+    @property
+    def hardcore_artisans(self):
+        """
+        Return a list of dictionaries defining the account's artisans on
+        hardcore mode.
+        
+        """
+        data = self._json_property('hardcore-artisans')
+        ret = []
+        for artisan in data:
+            pyart = {
+                'slug' : artisan['slug'],
+                'level' : artisan['level'],
+                'step_current' : artisan['step-current'],
+                'step_max' : artisan['step-max'],
+            }
+            ret.append(pyart)
+        return ret
         
     @property
     def progression(self):
@@ -60,7 +100,15 @@ class Account(pyablo._FetchMixin):
         Returns a dictionary defining the account's total kills.
         
         """
-        return self._json_property('kills')
+        data = self._json_property('kills')
+        
+        ret = {
+            'monsters' : data['monsters'],
+            'elites' : data['elites'],
+            'hardcore_monsters' : data['hardcoreMonsters']
+        }
+        
+        return ret
         
     @property
     def time_played(self):
