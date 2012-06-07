@@ -68,3 +68,10 @@ class D3API(pyablo._FetchMixin):
         
         """
         return pyablo.Account(self, name, region=region, locale=locale)
+        
+    def get_hero(self, id, region=None, locale=None):
+        """
+        Ge the hero with the id `id`.
+        
+        """
+        return pyablo.Hero(self, id, region=region, locale=locale)
