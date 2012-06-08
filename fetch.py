@@ -1,6 +1,8 @@
 ﻿import urllib.request
 from urllib.error import HTTPError #, URLError # Need URLError?
 
+# NOTE Fields left in from WoWthon
+
 class _FetchMixin:
     """
     Mixin class to define common behaviour for any object that fetches data.

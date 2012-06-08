@@ -6,21 +6,27 @@ class Hero(pyablo._FetchMixin):
     
     """
     
-    _PATH = 'hero/'
+    _PATH = 'account/'
+    _PATH2 = '/hero/'
     
-    def __init__(self, api, id, region=None, locale=None, json=None):
+    def __init__(self, api, account, id, region=None, locale=None, json=None):
         """
         
         """
         if not region: region = api.region
         if not locale: locale = api.locale
+        if isinstance(account, pyablo.Account):
+            # Get the account name if an Account object is passed
+            account = account.name
         self._api = api
         self._id = id
         self._region = region
         self._locale = locale
         self._json = json
+        self._bt = account.replace('#', '-')
         
-        self._url = pyablo.REGION[region]['prefix'] + self._PATH + str(id)
+        self._url = pyablo.REGION[region]['prefix'] + self._PATH + self._bt \
+                    + self._PATH2 + str(id)
         
     @property
     def id(self):
@@ -46,10 +52,10 @@ class Hero(pyablo._FetchMixin):
     @property
     def hero_class(self):
         """
-        Returns an ID for the hero's class.
+        Returns the hero's class.
         
         """
-        return self._json_property('hero_class')
+        return self._json_property('class')
         
     @property
     def level(self):
@@ -73,20 +79,12 @@ class Hero(pyablo._FetchMixin):
         return self._json_property('create_time')
         
     @property
-    def update_time(self):
+    def followers(self):
         """
-        Return a timestamp representing the time the hero was last updated.
+        Return a dictionary describing the hero's followers.
         
         """
-        return self._json_property('update_time')
-        
-    @property
-    def hirelings(self):
-        """
-        Return a dictionary describing the hero's hirelings.
-        
-        """
-        return self._json_property('hireling')
+        return self._json_property('followers')
         
     @property
     def active_skills(self):
@@ -105,12 +103,12 @@ class Hero(pyablo._FetchMixin):
         return self._json_property('skills')['passive']
         
     @property
-    def elites_killed(self):
+    def kills(self):
         """
         Return the number of elites killed by the hero.
         
         """
-        return self._json_property('elites_killed')
+        return self._json_property('kills')
         
     @property
     def stats(self):
@@ -118,4 +116,4 @@ class Hero(pyablo._FetchMixin):
         Return a dictionary detailing the character's current stats.
         
         """
-        return self._json_property('attributes')
+        return self._json_property('stats')

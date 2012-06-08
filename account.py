@@ -17,7 +17,7 @@ class Account(pyablo._FetchMixin):
         self._bt_name, self._bt_id = self._name.split('#')
         
         self._url = pyablo.REGION[region]['prefix'] + self._PATH + \
-                    self._bt_name + '/' + self._bt_id
+                    self._bt_name + '-' + self._bt_id
                     
     @property
     def name(self):
@@ -34,7 +34,7 @@ class Account(pyablo._FetchMixin):
         data = self._json_property('heroes')
         ret = []
         for id in data:
-            ret.append(self._api.get_hero(id, region=self._region,
+            ret.append(self.get_hero(id, region=self._region,
                                    locale=self._locale))
         return ret
         
@@ -47,7 +47,7 @@ class Account(pyablo._FetchMixin):
         
         """
         id = self._json_property('last-hero-played')
-        return self._api.get_hero(id)
+        return self.get_hero(id)
         
     @property
     def artisans(self):
@@ -118,3 +118,11 @@ class Account(pyablo._FetchMixin):
         
         """
         return self._json_property('time-played')
+        
+    def get_hero(self, id, region=None, locale=None, json=None):
+        """
+        Return the hero `id` from this account.
+        
+        """
+        return self._api.get_hero(self, id, region=region, locale=locale,
+                                  json=json)
